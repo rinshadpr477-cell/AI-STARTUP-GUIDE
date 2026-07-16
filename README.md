@@ -4,7 +4,7 @@ An AI-powered knowledge platform that helps early-stage founders navigate compan
 
 ## Live Demo
 
-- **Live URL:** [Add your Vercel URL here after deployment]
+- **Live URL:** https://ai-startup-guide-xbh2.vercel.app/
 - **GitHub Repo:** https://github.com/rinshadpr477-cell/AI-STARTUP-GUIDE
 - **Admin login:** `admin@startupnavigator.com` / `Admin@123`
 
