@@ -21,10 +21,8 @@ export async function generateGroundedAnswer(prompt: string) {
       return response.text ?? "";
     } catch (err) {
       lastError = err;
-      const status = (err as { status?: number })?.status;
-      const isRetryable = status === 503 || status === 429;
-
-      if (isRetryable && attempt < MAX_ATTEMPTS) {
+      const status = (err as { status?: number })?.status;  
+      if (status === 503 && attempt < MAX_ATTEMPTS) {
         await sleep(attempt * 1000);
         continue;
       }

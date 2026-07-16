@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Search, Loader2, Copy, Check, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 import { askQuestion, type SearchResult } from "@/lib/actions/ai-search";
 import { FormattedAnswer } from "./formatted-answer";
 
@@ -26,6 +27,9 @@ export function AiSearchClient() {
     startTransition(async () => {
       const res = await askQuestion(q);
       setResult(res);
+      if (res.status === "error") {
+        toast.error(res.message);
+      }
     });
   }
 
@@ -52,8 +56,17 @@ export function AiSearchClient() {
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 flex gap-2">
-          <input value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="e.g. How do I register a private limited company?" className="flex-1 rounded-md border border-input bg-background px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"/>
-          <button type="submit" disabled={isPending} className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm text-primary-foreground hover:opacity-90 disabled:opacity-60">
+          <input
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            placeholder="e.g. How do I register a private limited company?"
+            className="flex-1 rounded-md border border-input bg-background px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+          />
+          <button
+            type="submit"
+            disabled={isPending}
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-5 py-3 text-sm text-primary-foreground hover:opacity-90 disabled:opacity-60"
+          >
             {isPending ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />}
             Ask
           </button>
@@ -62,7 +75,11 @@ export function AiSearchClient() {
         {!result && !isPending && (
           <div className="mt-6 flex flex-wrap gap-2">
             {SUGGESTED_QUESTIONS.map((q) => (
-              <button key={q} onClick={() => runSearch(q)} className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-secondary">
+              <button
+                key={q}
+                onClick={() => runSearch(q)}
+                className="rounded-full border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-secondary"
+              >
                 {q}
               </button>
             ))}
@@ -89,7 +106,10 @@ export function AiSearchClient() {
           <div className="mt-8 rounded-lg border border-border bg-card p-6">
             <FormattedAnswer text={result.answer} />
 
-            <button onClick={handleCopy} className="mt-4 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
+            <button
+              onClick={handleCopy}
+              className="mt-4 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+            >
               {copied ? <Check size={14} /> : <Copy size={14} />}
               {copied ? "Copied" : "Copy answer"}
             </button>
@@ -101,7 +121,11 @@ export function AiSearchClient() {
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {result.sources.map((source) => (
-                    <Link key={source.slug} href={`/explore/${source.topicSlug}/${source.slug}`} className="rounded-full bg-secondary px-3 py-1 text-xs text-secondary-foreground hover:opacity-80">
+                    <Link
+                      key={source.slug}
+                      href={`/explore/${source.topicSlug}/${source.slug}`}
+                      className="rounded-full bg-secondary px-3 py-1 text-xs text-secondary-foreground hover:opacity-80"
+                    >
                       {source.title}
                     </Link>
                   ))}

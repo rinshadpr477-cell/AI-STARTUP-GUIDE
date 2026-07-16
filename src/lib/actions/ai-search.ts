@@ -72,11 +72,14 @@ export async function askQuestion(question: string): Promise<SearchResult> {
         slug: m.slug,
       })),
     };
-  } catch (err) {
+} catch (err) {
     console.error("Gemini generation failed:", err);
-    return {
-      status: "error",
-      message: "The AI is temporarily unavailable. Please try again in a moment.",
-    };
+    const status = (err as { status?: number })?.status;
+    const message =
+      status === 429
+        ? "Our daily AI usage limit has been reached. Please try again tomorrow, or contact us if this persists."
+        : "The AI is temporarily unavailable. Please try again in a moment.";
+
+    return { status: "error", message };
   }
 }
