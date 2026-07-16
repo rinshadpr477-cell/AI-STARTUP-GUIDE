@@ -163,6 +163,9 @@ Hosted on Vercel, connected to this GitHub repository for automatic deployments 
 - No password reset or email verification flow
 - No UI for promoting a user to admin — the seed script creates the only admin account
 - No automated test suite; all testing was manual
+
+  <img width="1882" height="1015" alt="image" src="https://github.com/user-attachments/assets/3efdd4c7-a35a-445f-b042-fe6115cec791" />
+
 - No file/image upload support for articles or resources 
 
 
