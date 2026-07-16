@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  password      String
+  role          Role           @default(USER)
+  createdAt     DateTime       @default(now())
+  articles      Article[]
+  resources     Resource[]
+  searchHistory SearchHistory[]
+}
+
+model Topic {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String
+  createdAt   DateTime  @default(now())
+  articles    Article[]
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String
+  tags        String[]
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  topic       Topic    @relation(fields: [topicId], references: [id])
+  topicId     String
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
+
+  @@index([topicId])
+}
+
+model Resource {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  type        String
+  description String
+  createdAt   DateTime @default(now())
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    String
+}
+
+model SearchHistory {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  topics    String[] @default([])
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@index([userId])
+  @@index([createdAt])
+}
